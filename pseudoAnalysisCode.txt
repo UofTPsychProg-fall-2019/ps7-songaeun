@@ -1,0 +1,69 @@
+# ===== 1. Study Section ===== #
+# * Study section was just showing natural scene images to participants for the later memory task.
+# In analysis, I will check if participants well paid their attention to the task by measuring task accuracy.
+# IV: whether the presented stimuli was rotated or not (call this variable as target_or_not, 1 = target(rotated), 0 = nontarget).
+# DV: whether participants detect the rotated image correctly or not (call this as detect_or_not, 1 = detect, 0 = miss)
+# Analysis: Accuracy for the rotation detection will be calculated for each participant. 
+#           If the accuracy is higher than .9, we can assume that the participant well performed the task, 
+#           so that we can use his/her data of the memory section.
+
+#__General setting__
+setwd("setWD_where_Data_exist")
+load("Packages_in_need")
+#_____Read Data_____ 
+study_data = read.mat("each_subject's_mat_file.mat")
+#____Get Accuracy____
+if target_or_not == detect_or_not {
+  correct_or_not = 1
+} else {
+  correct_or_not = 0
+}
+acc = mean(correct_or_not)
+#__filter below .9__
+if acc < .9{
+  NoUse = get subject number
+}
+# ===== 2. Memory Section ===== #
+# * Memory section was showing the pair of two images and asking participants to select which image was shown in the study section.
+# The pair of two images consist of the shown image and not-shown image during the study session, and they were presented on the right and left part of the monitor. 
+# Here, I will check again the accuracy of this recognition memory to see whether participants could correctly recognize the shown image.
+# Then, I will sort images based on how many participants were confused of the specific pairs in common, and see how those pairs are similar 
+# to each other in the perceptual and semantic aspects. 
+# (1) Accuracy check
+# IV: which image in the pair was shown during study section (shown_left_or_right)
+# DV: responses of participants (chosen_left_or_right)
+# (2) Image correlation
+# I will get correlation of pixel values of images to measure perceptual similarity
+# note: semantic similarity will be measured by some other software than R 
+# (https://colab.research.google.com/drive/19NOgh_Jl26loe_34xS-iFgrd5ykvkuCA).
+
+#_____Read Data_____ 
+memory_data = read.mat("each_subject's_mat_file_except_NoUse.mat")
+#____Get Accuracy____
+if shown_left_or_right == chosen_left_or_right {
+  correct_or_not = 1
+} else {
+  correct_or_not = 0
+}
+acc = mean(correct_or_not)
+if acc < .5 {
+  NoUse = get subject name
+}
+#__Get Confused Pair__
+ConfusedPair_common = []
+for sbj in allSub_butNoUse{
+  if correct_or_not == 0{
+    confusedPair = [get image names of the pair]
+  }
+  ConfusedPair_common[sbj] = confusedPair # confusedPair would be sorted by how many of participants were indeed confused of them.
+}
+#__Pixelwise correlation__
+for imgPair in ConfusedPair_common{
+  img1 = read_pixel('imgPair[1]')
+  img2 = read_pixel('imgPair[2]')
+  pxCorr = correlation(img1, img2)
+}
+#__t-test(not fixed yet)ofCorrelationCoefficient__
+Coef_lessConsufed = pxCorr_of_less_confused_pair
+Coef_moreConfused = pxCorr_of_more_confused_pair
+result = t_test(mCoef_lessConsufed, mCoef_moreConfused)
